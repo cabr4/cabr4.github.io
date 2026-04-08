@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>cabr4 :: Certificaciones</title>
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Oswald:wght@400;700&family=Barlow+Condensed:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: #0d0015;
+  background-image:
+    radial-gradient(ellipse at 15% 20%, rgba(120,0,180,0.35) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 75%, rgba(180,0,100,0.25) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 50%, rgba(50,0,110,0.45) 0%, transparent 70%);
+  font-family: 'Barlow Condensed', Arial, sans-serif;
+  font-size: 13px;
+  color: #ddbfff;
+  min-height: 100vh;
+  cursor: url('img/ui/cursor.png'), auto;
+}
+
+.stars-bg { position: fixed; top:0; left:0; right:0; bottom:0; pointer-events:none; z-index:0; overflow:hidden; }
+.star { position:absolute; animation:floatStar linear infinite; opacity:0; user-select:none; pointer-events:none; }
+@keyframes floatStar {
+  0%   { opacity:0; transform:translateY(0) rotate(0deg) scale(0.6); }
+  10%  { opacity:1; }
+  90%  { opacity:0.8; }
+  100% { opacity:0; transform:translateY(-110vh) rotate(720deg) scale(1.3); }
+}
+
+.cursor-star { position:fixed; pointer-events:none; z-index:9999; font-size:13px; line-height:1; animation:cstar-fade 0.7s ease-out forwards; user-select:none; }
+@keyframes cstar-fade {
+  0%   { opacity:1; transform:translateY(0) scale(1.2); }
+  100% { opacity:0; transform:translateY(-24px) scale(0.3); }
+}
+
+#wrap { max-width:100%; position:relative; z-index:1; }
+
+#hdr {
+  background: linear-gradient(180deg, #0d0015 0%, #200040 30%, #3d0066 55%, #200040 80%, #0d0015 100%);
+  border-bottom: 3px solid #cc00cc;
+  border-top: 3px solid #ff6600;
+  padding: 14px 20px 18px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+#hdr::before, #hdr::after {
+  content: '★  ✦  ★  ✦  ★  ✦  ★  ✦  ★  ✦  ★  ✦  ★  ✦  ★  ✦  ★  ✦  ★  ✦  ★  ✦';
+  display: block; font-size:10px; color:rgba(200,0,200,0.55); letter-spacing:5px;
+}
+#hdr::before { margin-bottom:10px; }
+#hdr::after  { margin-top:10px; }
+
+.gothic-title {
+  font-family: 'UnifrakturMaguntia', serif;
+  font-size: 72px;
+  line-height: 1;
+  background: linear-gradient(180deg, #ffcc00 0%, #ff9900 30%, #ff6600 65%, #ffd700 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 14px rgba(204,0,204,0.9)) drop-shadow(3px 3px 0 rgba(0,0,0,0.6));
+  animation: title-glow 3s ease-in-out infinite;
+}
+@keyframes title-glow {
+  0%,100% { filter: drop-shadow(0 0 14px rgba(204,0,204,0.9)) drop-shadow(3px 3px 0 rgba(0,0,0,0.6)); }
+  50%      { filter: drop-shadow(0 0 22px rgba(255,100,0,0.95)) drop-shadow(3px 3px 0 rgba(0,0,0,0.6)); }
+}
+.hdr-sub {
+  font-family: 'Oswald', sans-serif; font-size:12px; color:#cc66ff;
+  letter-spacing:4px; margin-top:5px; text-transform:uppercase; text-shadow:0 0 10px #cc00cc;
+}
+
+.ticker-bar {
+  background: linear-gradient(90deg, #200033, #440033, #330044, #200033);
+  border-top:1px solid #880066; border-bottom:2px solid #cc00cc; padding:5px 0;
+}
+.ticker-bar marquee { color:#ff99ee; font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:2px; text-transform:uppercase; }
+
+.back-bar {
+  background: #120020;
+  border-bottom: 2px solid #550055;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  overflow-x: auto;
+}
+.back-link {
+  color: #9966bb; font-family:'Oswald',sans-serif; font-size:12px;
+  padding: 7px 14px; text-transform:uppercase; letter-spacing:1px;
+  text-decoration:none; border-right:1px solid #330033; white-space:nowrap;
+  transition: background 0.1s, color 0.1s;
+}
+.back-link:hover { background:#300055; color:#ff66ff; text-shadow:0 0 8px #cc00cc; }
+.back-link.active { background:#300055; color:#ff66ff; text-shadow:0 0 8px #cc00cc; }
+
+#content { padding: 16px 20px; background: rgba(8,0,18,0.85); min-height: 70vh; }
+
+.pcard {
+  background: linear-gradient(180deg, rgba(28,0,52,0.95) 0%, rgba(12,0,26,0.95) 100%);
+  border: 1px solid #550055;
+  margin-bottom: 14px;
+  position: relative;
+  overflow: hidden;
+}
+.pcard::after {
+  content: '★';
+  position: absolute; right: 9px; top: 5px;
+  color: rgba(180,0,180,0.2); font-size: 18px; pointer-events: none;
+}
+.pcard-ttl {
+  font-family: 'UnifrakturMaguntia', serif; font-size:24px;
+  padding: 5px 13px 4px;
+  background: linear-gradient(90deg, #2a0055, #550033, #2a0055);
+  color: #ff99ff;
+  border-bottom: 1px solid #cc00cc;
+  text-shadow: 0 0 10px rgba(200,0,200,0.7);
+  letter-spacing: 1px;
+}
+.pcard-ttl .ttl-note { font-family:'Oswald',sans-serif; font-size:12px; color:#886699; font-weight:normal; }
+.pcard-body { padding: 12px 14px; }
+
+/* ── Cert grid ── */
+.cert-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 10px;
+}
+@media(max-width:600px) { .cert-grid { grid-template-columns: 1fr; } }
+
+/* ── Cert card ── */
+.cert-card {
+  background: rgba(18,0,35,0.85);
+  border: 1px solid #550055;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.cert-card:hover {
+  border-color: #cc00cc;
+  box-shadow: 0 0 14px rgba(200,0,200,0.25);
+}
+
+/* Color accent bar by issuer */
+.cert-card .accent-bar {
+  height: 3px;
+  width: 100%;
+}
+.acc-offsec  { background: linear-gradient(90deg, #cc2200, #ff6600); }
+.acc-els     { background: linear-gradient(90deg, #005588, #00aaff); }
+.acc-ine     { background: linear-gradient(90deg, #005588, #00aaff); }
+.acc-other   { background: linear-gradient(90deg, #6600cc, #cc00cc); }
+
+.cert-inner { padding: 10px 12px; }
+
+.cert-abbr {
+  font-family: 'Oswald', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  line-height: 1.1;
+  margin-bottom: 3px;
+}
+.cert-card.offsec  .cert-abbr { color: #ff7700; text-shadow: 0 0 10px rgba(255,120,0,0.5); }
+.cert-card.els     .cert-abbr { color: #33aaff; text-shadow: 0 0 10px rgba(0,150,255,0.4); }
+.cert-card.ine     .cert-abbr { color: #33aaff; text-shadow: 0 0 10px rgba(0,150,255,0.4); }
+.cert-card.other   .cert-abbr { color: #cc66ff; text-shadow: 0 0 10px rgba(180,0,180,0.4); }
+
+.cert-fullname {
+  font-size: 12px;
+  color: #9977bb;
+  line-height: 1.5;
+  margin-bottom: 6px;
+}
+
+.cert-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.cert-issuer {
+  font-family: 'Oswald', sans-serif;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+.cert-card.offsec  .cert-issuer { background: rgba(80,20,0,0.6); color: #ff9966; border: 1px solid #552200; }
+.cert-card.els     .cert-issuer { background: rgba(0,20,60,0.6); color: #66bbff; border: 1px solid #003366; }
+.cert-card.ine     .cert-issuer { background: rgba(0,20,60,0.6); color: #66bbff; border: 1px solid #003366; }
+.cert-card.other   .cert-issuer { background: rgba(40,0,70,0.6); color: #cc99ff; border: 1px solid #440066; }
+
+.cert-cat {
+  font-family: 'Oswald', sans-serif;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #665577;
+  padding: 2px 8px;
+  border: 1px solid #330044;
+  border-radius: 10px;
+  background: rgba(20,0,35,0.6);
+}
+
+.cert-badge {
+  margin-left: auto;
+  font-size: 16px;
+}
+
+/* ── Stats strip ── */
+.stats-strip {
+  display: flex;
+  gap: 0;
+  border: 1px solid #550055;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+.ss-tile {
+  flex: 1;
+  background: rgba(20,0,40,0.8);
+  padding: 12px 8px;
+  text-align: center;
+  border-right: 1px solid #330033;
+}
+.ss-tile:last-child { border-right: none; }
+.ss-val {
+  font-family: 'Oswald', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #ff6600;
+  text-shadow: 0 0 12px rgba(255,102,0,0.6);
+  line-height: 1.1;
+}
+.ss-lbl {
+  font-family: 'Oswald', sans-serif;
+  font-size: 10px;
+  color: #775599;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 3px;
+}
+
+/* ── Focus areas ── */
+.focus-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 8px;
+}
+.focus-item {
+  background: rgba(25,0,45,0.7);
+  border: 1px solid #440044;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #bb99dd;
+  line-height: 1.6;
+}
+.focus-item strong {
+  display: block;
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  color: #ff66ff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 2px;
+  text-shadow: 0 0 6px rgba(200,0,200,0.4);
+}
+
+/* ── GIF separator ── */
+.gif-sep { text-align:center; padding:2px 0; margin:2px 0; overflow:hidden; line-height:0; }
+.gif-sep img { image-rendering:pixelated; height:14px; width:100%; object-fit:cover; }
+
+/* ── Footer ── */
+#btn-bar {
+  background: #100020;
+  border-top: 2px solid #cc00cc;
+  border-bottom: 2px solid #550055;
+  padding: 7px 0;
+  overflow: hidden;
+}
+#btn-bar img {
+  height:31px; width:auto; margin:0 3px; image-rendering:pixelated;
+  border:1px solid #440044; vertical-align:middle; opacity:0.8; transition:opacity 0.1s,border-color 0.1s;
+}
+#btn-bar img:hover { opacity:1; border-color:#cc00cc; }
+
+#footer {
+  background: linear-gradient(90deg, #0d0015, #200033, #0d0015);
+  border-top: 2px solid #550055;
+  text-align: center;
+  padding: 12px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  color: #7755aa;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+#footer a { color: #ff66ff; text-decoration: none; }
+.footer-bling {
+  background: linear-gradient(90deg, #ffd700, #ff9900, #ffd700, #ff6600, #ffd700);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: bling-shine 2s linear infinite;
+  font-weight: bold;
+}
+@keyframes bling-shine {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+#floaty-bugs { position:fixed; bottom:15px; right:15px; z-index:999; pointer-events:none; animation:bugs-bob 2.8s ease-in-out infinite; }
+#floaty-bugs img { width:80px; image-rendering:pixelated; }
+#pumas-fixed { position:fixed; bottom:15px; left:15px; z-index:999; pointer-events:none; animation:bugs-bob 2.8s ease-in-out infinite; }
+#pumas-fixed img { width:100px; image-rendering:pixelated; animation:pumas-spin 3s linear infinite; }
+@keyframes bugs-bob {
+  0%,100% { transform:translateY(0) rotate(0deg); }
+  40%      { transform:translateY(-10px) rotate(-4deg); }
+  70%      { transform:translateY(-5px) rotate(3deg); }
+}
+@keyframes pumas-spin {
+  from { transform:rotateY(0deg); }
+  to   { transform:rotateY(360deg); }
+}
+</style>
+
+<script>
+window.addEventListener('load', function () {
+  const bg = document.getElementById('stars-bg');
+  const chars = ['★','✦','✧','☆','✩','✫','✬','✭','✮','✯','⋆','◆'];
+  const colors = ['#cc00cc','#ff66cc','#ff6600','#ffd700','#ff33ff','#ffaa00','#9900cc'];
+  for (let i = 0; i < 40; i++) {
+    const s = document.createElement('span');
+    s.className = 'star';
+    s.textContent = chars[Math.floor(Math.random() * chars.length)];
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top  = (20 + Math.random() * 100) + '%';
+    s.style.fontSize = (7 + Math.random() * 15) + 'px';
+    s.style.color = colors[Math.floor(Math.random() * colors.length)];
+    const dur = 7 + Math.random() * 14;
+    s.style.animationDuration = dur + 's';
+    s.style.animationDelay = (-Math.random() * dur) + 's';
+    bg.appendChild(s);
+  }
+
+  const trailChars = ['★','✦','✧','☆','💜','🔥','💎'];
+  const trailCols  = ['#ff66ff','#cc00cc','#ffd700','#ff6600','#ff99ff'];
+  document.addEventListener('mousemove', function(e) {
+    if (Math.random() > 0.35) return;
+    const el = document.createElement('span');
+    el.className = 'cursor-star';
+    el.textContent = trailChars[Math.floor(Math.random() * trailChars.length)];
+    el.style.left = (e.clientX + Math.random()*12 - 6) + 'px';
+    el.style.top  = (e.clientY + Math.random()*12 - 6) + 'px';
+    el.style.color = trailCols[Math.floor(Math.random() * trailCols.length)];
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 700);
+  });
+});
+</script>
+</head>
+<body>
+
+<div class="stars-bg" id="stars-bg"></div>
+
+<div id="wrap">
+
+  <div id="hdr">
+    <div class="gothic-title">Cabr4</div>
+    <div class="hdr-sub">:: certificaciones :: papel que avala el daño ::</div>
+  </div>
+
+  <div class="ticker-bar">
+    <marquee scrollamount="5">
+      ♦ eWPTX ♦ eMAPT ♦ C-AI/MLPEN ♦ CCPenX-AWS ♦ OSWE ♦ CAPenX ♦ eJPT ♦ OSCP ♦ coleccionando papeles desde siempre ♦
+    </marquee>
+  </div>
+
+  <div class="back-bar">
+    <a class="back-link" href="index.html">← Perfil</a>
+    <a class="back-link" href="fotos.html">Fotos</a>
+    <a class="back-link" href="musica.html">Musica</a>
+    <a class="back-link" href="bugbounty.html">Bug Bounty</a>
+    <a class="back-link active" href="certificaciones.html">Certs</a>
+    <a class="back-link" href="ctf.html">CTF</a>
+  </div>
+
+  <div id="content">
+
+    <!-- STATS STRIP -->
+    <div class="stats-strip">
+      <div class="ss-tile">
+        <div class="ss-val">8</div>
+        <div class="ss-lbl">Certs totales</div>
+      </div>
+      <div class="ss-tile">
+        <div class="ss-val">2</div>
+        <div class="ss-lbl">OffSec</div>
+      </div>
+      <div class="ss-tile">
+        <div class="ss-val">4</div>
+        <div class="ss-lbl">eLearnSec / INE</div>
+      </div>
+      <div class="ss-tile">
+        <div class="ss-val">2</div>
+        <div class="ss-lbl">Otras</div>
+      </div>
+    </div>
+
+    <!-- CERT GRID -->
+    <div class="pcard">
+      <div class="pcard-ttl">Certificaciones <span class="ttl-note">(8 obtenidas)</span></div>
+      <div class="pcard-body">
+        <div class="cert-grid">
+
+          <!-- OSCP -->
+          <div class="cert-card offsec">
+            <div class="accent-bar acc-offsec"></div>
+            <div class="cert-inner">
+              <div class="cert-abbr">OSCP</div>
+              <div class="cert-fullname">OffSec Certified Professional</div>
+              <div class="cert-meta">
+                <span class="cert-issuer">OffSec</span>
+                <span class="cert-cat">Pentesting</span>
+                <span class="cert-badge">🔴</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- OSWE -->
+          <div class="cert-card offsec">
+            <div class="accent-bar acc-offsec"></div>
+            <div class="cert-inner">
+              <div class="cert-abbr">OSWE</div>
+              <div class="cert-fullname">OffSec Web Expert</div>
+              <div class="cert-meta">
+                <span class="cert-issuer">OffSec</span>
+                <span class="cert-cat">Web / Code Review</span>
+                <span class="cert-badge">🔴</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- eWPTX -->
+          <div class="cert-card els">
+            <div class="accent-bar acc-els"></div>
+            <div class="cert-inner">
+              <div class="cert-abbr">eWPTX</div>
+              <div class="cert-fullname">Web Application Penetration Tester eXtreme</div>
+              <div class="cert-meta">
+                <span class="cert-issuer">INE / eLS</span>
+                <span class="cert-cat">Web AppSec</span>
+                <span class="cert-badge">🔵</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- eMAPT -->
+          <div class="cert-card els">
+            <div class="accent-bar acc-els"></div>
+            <div class="cert-inner">
+              <div class="cert-abbr">eMAPT</div>
+              <div class="cert-fullname">Mobile Application Penetration Tester</div>
+              <div class="cert-meta">
+                <span class="cert-issuer">INE / eLS</span>
+                <span class="cert-cat">Mobile</span>
+                <span class="cert-badge">🔵</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- eJPT -->
+          <div class="cert-card els">
+            <div class="accent-bar acc-els"></div>
+            <div class="cert-inner">
+              <div class="cert-abbr">eJPT</div>
+              <div class="cert-fullname">eLearnSecurity Junior Penetration Tester</div>
+              <div class="cert-meta">
+                <span class="cert-issuer">INE / eLS</span>
+                <span class="cert-cat">Pentesting</span>
+                <span class="cert-badge">🔵</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- CAPenX -->
+          <div class="cert-card ine">
+            <div class="accent-bar acc-ine"></div>
+            <div class="cert-inner">
+              <div class="cert-abbr">CAPenX</div>
+              <div class="cert-fullname">Certified AppSec Pentesting eXpert</div>
+              <div class="cert-meta">
+                <span class="cert-issuer">INE</span>
+                <span class="cert-cat">AppSec</span>
+                <span class="cert-badge">🔵</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- C-AI/MLPEN -->
+          <div class="cert-card other">
+            <div class="accent-bar acc-other"></div>
+            <div class="cert-inner">
+              <div class="cert-abbr">C-AI/MLPEN</div>
+              <div class="cert-fullname">Certified AI/ML Pentester</div>
+              <div class="cert-meta">
+                <span class="cert-issuer">SecOpsGroup</span>
+                <span class="cert-cat">AI / ML Security</span>
+                <span class="cert-badge">💜</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- CCPenX-AWS -->
+          <div class="cert-card other">
+            <div class="accent-bar acc-other"></div>
+            <div class="cert-inner">
+              <div class="cert-abbr">CCPenX-AWS</div>
+              <div class="cert-fullname">Certified Cloud Pentesting eXpert — AWS</div>
+              <div class="cert-meta">
+                <span class="cert-issuer">SecOpsGroup</span>
+                <span class="cert-cat">Cloud / AWS</span>
+                <span class="cert-badge">💜</span>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- cert-grid -->
+
+        <div style="font-size:10px;color:#440033;text-align:center;font-style:italic;margin-top:10px">
+          ✦ coleccionando papeles desde siempre · el conocimiento es lo que importa ✦
+        </div>
+      </div>
+    </div>
+
+    <div class="gif-sep"><img src="img/dividers/stars.gif" alt=""></div>
+
+    <!-- AREAS DE ENFOQUE -->
+    <div class="pcard">
+      <div class="pcard-ttl">Areas de Enfoque</div>
+      <div class="pcard-body">
+        <div class="focus-grid">
+          <div class="focus-item">
+            <strong>Web AppSec</strong>
+            eWPTX · OSWE · CAPenX<br>
+            XSS, SSRF, SQLi, Auth bypass
+          </div>
+          <div class="focus-item">
+            <strong>Mobile Security</strong>
+            eMAPT<br>
+            Android RE, Frida, intents
+          </div>
+          <div class="focus-item">
+            <strong>Pentesting</strong>
+            OSCP · eJPT<br>
+            Red team, exploits, privesc
+          </div>
+          <div class="focus-item">
+            <strong>Cloud Security</strong>
+            CCPenX-AWS<br>
+            AWS misconfigs, IAM, S3
+          </div>
+          <div class="focus-item">
+            <strong>AI / ML Security</strong>
+            C-AI/MLPEN<br>
+            Prompt injection, model attacks
+          </div>
+          <div class="focus-item">
+            <strong>AppSec Engineering</strong>
+            CAPenX · OSWE<br>
+            Code review, SAST, threat modeling
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gif-sep"><img src="img/dividers/rainbow.gif" alt=""></div>
+
+    <!-- QUOTE -->
+    <div class="pcard">
+      <div class="pcard-body" style="padding:16px 18px">
+        <div style="border-left:3px solid #cc00cc;padding:10px 16px;font-size:13px;color:#bb99cc;font-style:italic;line-height:2;background:rgba(35,0,60,0.4);position:relative">
+          <span style="font-family:'UnifrakturMaguntia',serif;font-size:60px;color:rgba(180,0,180,0.15);position:absolute;top:-8px;left:6px;line-height:1;font-style:normal">"</span>
+          Las certificaciones prueban que puedes aprender. <strong style="color:#ff66ff;font-style:normal">Las vulnerabilidades</strong> prueban que aprendiste.
+          <div style="text-align:right;font-size:10px;color:#550055;margin-top:6px;font-style:normal">— cabr4, despues del tercer tequila</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- #content -->
+
+  <!-- BUTTON BAR -->
+  <div id="btn-bar">
+    <marquee behavior="alternate" scrollamount="3">
+      <a href="https://hackerone.com/cabr4"                  target="_blank"><img src="img/buttons/hackerone.gif"     alt="h1"></a>
+      <a href="https://www.youtube.com/@Cabr4wastaken"       target="_blank"><img src="img/buttons/click_here.gif"    alt="youtube"></a>
+      <a href="https://www.w3schools.com/html/"              target="_blank"><img src="img/buttons/html.gif"          alt="html"></a>
+      <a href="https://www.reddit.com/r/buildapc/"           target="_blank"><img src="img/buttons/bestvwmonitor.gif" alt="monitor"></a>
+      <img src="img/buttons/notepad4.gif" alt="">
+      <a href="https://www.youtube.com/watch?v=geGziPUQD2U" target="_blank"><img src="img/buttons/imhigh.gif"        alt=""></a>
+    </marquee>
+  </div>
+
+  <!-- FOOTER -->
+  <div id="footer">
+    hecho con ♥ y falta de sueño &nbsp;·&nbsp;
+    hosted on github pages &nbsp;·&nbsp;
+    Menos Violencia, Mas Perreo &nbsp;·&nbsp;
+    <span class="footer-bling">★ Always under construction ★</span>
+  </div>
+
+</div><!-- #wrap -->
+
+<div id="floaty-bugs">
+  <img src="img/ui/bugs.gif" alt="bugs">
+</div>
+
+<div id="pumas-fixed">
+  <img src="img/ui/pumas.png" alt="Pumas">
+</div>
+
+</body>
+</html>

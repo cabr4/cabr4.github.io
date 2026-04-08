@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>cabr4 :: Bug Bounty</title>
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Oswald:wght@400;700&family=Barlow+Condensed:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: #0d0015;
+  background-image:
+    radial-gradient(ellipse at 15% 20%, rgba(120,0,180,0.35) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 75%, rgba(180,0,100,0.25) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 50%, rgba(50,0,110,0.45) 0%, transparent 70%);
+  font-family: 'Barlow Condensed', Arial, sans-serif;
+  font-size: 13px;
+  color: #ddbfff;
+  min-height: 100vh;
+  cursor: url('img/ui/cursor.png'), auto;
+}
+
+.stars-bg { position: fixed; top:0; left:0; right:0; bottom:0; pointer-events:none; z-index:0; overflow:hidden; }
+.star { position:absolute; animation:floatStar linear infinite; opacity:0; user-select:none; pointer-events:none; }
+@keyframes floatStar {
+  0%   { opacity:0; transform:translateY(0) rotate(0deg) scale(0.6); }
+  10%  { opacity:1; }
+  90%  { opacity:0.8; }
+  100% { opacity:0; transform:translateY(-110vh) rotate(720deg) scale(1.3); }
+}
+
+.cursor-star { position:fixed; pointer-events:none; z-index:9999; font-size:13px; line-height:1; animation:cstar-fade 0.7s ease-out forwards; user-select:none; }
+@keyframes cstar-fade {
+  0%   { opacity:1; transform:translateY(0) scale(1.2); }
+  100% { opacity:0; transform:translateY(-24px) scale(0.3); }
+}
+
+#wrap { max-width:100%; position:relative; z-index:1; }
+
+#hdr {
+  background: linear-gradient(180deg, #0d0015 0%, #200040 30%, #3d0066 55%, #200040 80%, #0d0015 100%);
+  border-bottom: 3px solid #cc00cc;
+  border-top: 3px solid #ff6600;
+  padding: 14px 20px 18px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+#hdr::before, #hdr::after {
+  content: '★  ✦  ★  ✦  ★  ✦  ★  ✦  ★  ✦  ★  ✦  ★  ✦  ★  ✦  ★  ✦  ★  ✦  ★  ✦';
+  display: block; font-size:10px; color:rgba(200,0,200,0.55); letter-spacing:5px;
+}
+#hdr::before { margin-bottom:10px; }
+#hdr::after  { margin-top:10px; }
+
+.gothic-title {
+  font-family: 'UnifrakturMaguntia', serif;
+  font-size: 72px;
+  line-height: 1;
+  background: linear-gradient(180deg, #ffcc00 0%, #ff9900 30%, #ff6600 65%, #ffd700 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 14px rgba(204,0,204,0.9)) drop-shadow(3px 3px 0 rgba(0,0,0,0.6));
+  animation: title-glow 3s ease-in-out infinite;
+}
+@keyframes title-glow {
+  0%,100% { filter: drop-shadow(0 0 14px rgba(204,0,204,0.9)) drop-shadow(3px 3px 0 rgba(0,0,0,0.6)); }
+  50%      { filter: drop-shadow(0 0 22px rgba(255,100,0,0.95)) drop-shadow(3px 3px 0 rgba(0,0,0,0.6)); }
+}
+.hdr-sub {
+  font-family: 'Oswald', sans-serif; font-size:12px; color:#cc66ff;
+  letter-spacing:4px; margin-top:5px; text-transform:uppercase; text-shadow:0 0 10px #cc00cc;
+}
+
+.ticker-bar {
+  background: linear-gradient(90deg, #200033, #440033, #330044, #200033);
+  border-top:1px solid #880066; border-bottom:2px solid #cc00cc; padding:5px 0;
+}
+.ticker-bar marquee { color:#ff99ee; font-family:'Oswald',sans-serif; font-size:12px; letter-spacing:2px; text-transform:uppercase; }
+
+.back-bar {
+  background: #120020;
+  border-bottom: 2px solid #550055;
+  padding: 0 14px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  overflow-x: auto;
+}
+.back-link {
+  color: #9966bb; font-family:'Oswald',sans-serif; font-size:12px;
+  padding: 7px 14px; text-transform:uppercase; letter-spacing:1px;
+  text-decoration:none; border-right:1px solid #330033; white-space:nowrap;
+  transition: background 0.1s, color 0.1s;
+}
+.back-link:hover { background:#300055; color:#ff66ff; text-shadow:0 0 8px #cc00cc; }
+.back-link.active { background:#300055; color:#ff66ff; text-shadow:0 0 8px #cc00cc; }
+
+#content { padding: 16px 20px; background: rgba(8,0,18,0.85); min-height: 70vh; }
+
+.pcard {
+  background: linear-gradient(180deg, rgba(28,0,52,0.95) 0%, rgba(12,0,26,0.95) 100%);
+  border: 1px solid #550055;
+  margin-bottom: 14px;
+  position: relative;
+  overflow: hidden;
+}
+.pcard::after {
+  content: '★';
+  position: absolute;
+  right: 9px; top: 5px;
+  color: rgba(180,0,180,0.2);
+  font-size: 18px;
+  pointer-events: none;
+}
+.pcard-ttl {
+  font-family: 'UnifrakturMaguntia', serif; font-size:24px;
+  padding: 5px 13px 4px;
+  background: linear-gradient(90deg, #2a0055, #550033, #2a0055);
+  color: #ff99ff;
+  border-bottom: 1px solid #cc00cc;
+  text-shadow: 0 0 10px rgba(200,0,200,0.7);
+  letter-spacing: 1px;
+}
+.pcard-ttl .ttl-note {
+  font-family: 'Oswald', sans-serif; font-size:12px; color:#886699; font-weight:normal;
+}
+.pcard-body { padding: 12px 14px; }
+
+/* ── Two-column layout for wider content ── */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+@media(max-width:700px) { .two-col { grid-template-columns: 1fr; } }
+
+/* ── Stat boxes ── */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.stat-tile {
+  background: rgba(30,0,55,0.8);
+  border: 1px solid #660066;
+  padding: 10px 12px;
+  text-align: center;
+}
+.stat-tile .sval {
+  font-family: 'Oswald', sans-serif;
+  font-size: 26px;
+  color: #ff6600;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(255,102,0,0.6);
+  line-height: 1.1;
+}
+.stat-tile .slbl {
+  font-family: 'Oswald', sans-serif;
+  font-size: 10px;
+  color: #9966bb;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 3px;
+}
+
+/* ── Bug cards ── */
+.bug-card {
+  background: rgba(25,0,5,0.7);
+  border-left: 4px solid #ff3300;
+  padding: 9px 12px;
+  margin-bottom: 9px;
+}
+.bug-card:last-child { margin-bottom: 0; }
+.bug-card.med  { border-left-color: #ff7700; }
+.bug-card.low  { border-left-color: #ffcc00; }
+.bug-card.info { border-left-color: #0099ff; background: rgba(0,10,30,0.7); }
+
+.btag {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: bold;
+  margin-right: 4px;
+  margin-bottom: 4px;
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 1px;
+}
+.t-res  { background: #0d2200; color: #66ff00; border: 1px solid #224400; }
+.t-tri  { background: #221100; color: #ffaa00; border: 1px solid #553300; }
+.t-dup  { background: #201600; color: #ddaa00; border: 1px solid #443300; }
+.t-inf  { background: #001020; color: #0099ff; border: 1px solid #003355; }
+.t-idor { background: #220000; color: #ff3300; border: 1px solid #550000; }
+.t-xss  { background: #200020; color: #ff66ff; border: 1px solid #550055; }
+.t-int  { background: #221100; color: #ff7700; border: 1px solid #553300; }
+.t-priv { background: #100022; color: #cc66ff; border: 1px solid #440066; }
+.t-rce  { background: #200000; color: #ff0000; border: 1px solid #660000; }
+.t-crit { background: #200000; color: #ff0000; border: 1px solid #660000; font-size:11px; }
+.t-high { background: #221100; color: #ff7700; border: 1px solid #553300; }
+.t-med  { background: #201600; color: #ddaa00; border: 1px solid #443300; }
+.t-low  { background: #201a00; color: #cccc00; border: 1px solid #444400; }
+
+.bug-target { color: #ff9999; font-weight: bold; font-size: 13px; font-family: 'Oswald', sans-serif; }
+.bug-note { font-size: 11px; color: #886666; margin-top: 3px; line-height: 1.7; }
+code { font-size: 10px; background: rgba(0,0,0,0.6); padding: 1px 4px; color: #ff9966; border-radius: 2px; }
+.strikethrough { text-decoration: line-through; }
+
+/* ── Platform card ── */
+.platform-card {
+  background: rgba(20,0,40,0.8);
+  border: 1px solid #550055;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.platform-icon {
+  font-size: 28px;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.platform-info { flex: 1; }
+.platform-name {
+  font-family: 'Oswald', sans-serif;
+  font-size: 15px;
+  color: #ff66ff;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 0 8px rgba(200,0,200,0.5);
+  margin-bottom: 3px;
+}
+.platform-desc { font-size: 12px; color: #9966bb; line-height: 1.7; }
+.platform-link {
+  display: inline-block;
+  margin-top: 5px;
+  color: #ff6600;
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.platform-link:hover { color: #ffcc00; text-decoration: underline; }
+
+/* ── Team member grid ── */
+.team-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.team-member {
+  background: rgba(30,0,55,0.7);
+  border: 1px solid #550055;
+  padding: 7px 14px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 12px;
+  color: #ff99ff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: border-color 0.1s, color 0.1s;
+}
+.team-member.me {
+  border-color: #cc00cc;
+  color: #ff66ff;
+  background: rgba(50,0,80,0.7);
+  box-shadow: 0 0 8px rgba(200,0,200,0.3);
+}
+.team-member:hover { border-color: #cc00cc; color: #ff66ff; }
+
+/* ── Tags / techniques ── */
+.tags-cloud { display: flex; flex-wrap: wrap; gap: 6px; }
+.ttag {
+  background: rgba(60,0,80,0.55);
+  border: 1px solid #550055;
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 12px;
+  color: #bb99dd;
+  transition: border-color 0.1s, color 0.1s;
+}
+.ttag:hover { border-color: #cc00cc; color: #ff99ff; }
+.ttag:nth-child(3n)   { border-color: #883300; color: #ff9966; background: rgba(60,20,0,0.4); }
+.ttag:nth-child(5n)   { border-color: #886600; color: #ffcc66; background: rgba(50,35,0,0.4); }
+.ttag:nth-child(3n):hover { border-color: #ff6600; color: #ffcc00; }
+.ttag:nth-child(5n):hover { border-color: #ffcc00; color: #ffffff; }
+
+/* ── GIF separator ── */
+.gif-sep { text-align:center; padding:2px 0; margin:2px 0; overflow:hidden; line-height:0; }
+.gif-sep img { image-rendering:pixelated; height:14px; width:100%; object-fit:cover; }
+
+/* ── Footer ── */
+#btn-bar {
+  background: #100020;
+  border-top: 2px solid #cc00cc;
+  border-bottom: 2px solid #550055;
+  padding: 7px 0;
+  overflow: hidden;
+}
+#btn-bar img {
+  height: 31px; width:auto; margin:0 3px; image-rendering:pixelated;
+  border:1px solid #440044; vertical-align:middle; opacity:0.8; transition:opacity 0.1s,border-color 0.1s;
+}
+#btn-bar img:hover { opacity:1; border-color:#cc00cc; }
+
+#footer {
+  background: linear-gradient(90deg, #0d0015, #200033, #0d0015);
+  border-top: 2px solid #550055;
+  text-align: center;
+  padding: 12px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  color: #7755aa;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+#footer a { color: #ff66ff; text-decoration: none; }
+.footer-bling {
+  background: linear-gradient(90deg, #ffd700, #ff9900, #ffd700, #ff6600, #ffd700);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: bling-shine 2s linear infinite;
+  font-weight: bold;
+}
+@keyframes bling-shine {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+#floaty-bugs { position:fixed; bottom:15px; right:15px; z-index:999; pointer-events:none; animation:bugs-bob 2.8s ease-in-out infinite; }
+#floaty-bugs img { width:80px; image-rendering:pixelated; }
+#pumas-fixed { position:fixed; bottom:15px; left:15px; z-index:999; pointer-events:none; animation:bugs-bob 2.8s ease-in-out infinite; }
+#pumas-fixed img { width:100px; image-rendering:pixelated; animation:pumas-spin 3s linear infinite; }
+@keyframes bugs-bob {
+  0%,100% { transform:translateY(0) rotate(0deg); }
+  40%      { transform:translateY(-10px) rotate(-4deg); }
+  70%      { transform:translateY(-5px) rotate(3deg); }
+}
+@keyframes pumas-spin {
+  from { transform:rotateY(0deg); }
+  to   { transform:rotateY(360deg); }
+}
+</style>
+
+<script>
+window.addEventListener('load', function () {
+  const bg = document.getElementById('stars-bg');
+  const chars = ['★','✦','✧','☆','✩','✫','✬','✭','✮','✯','⋆','◆'];
+  const colors = ['#cc00cc','#ff66cc','#ff6600','#ffd700','#ff33ff','#ffaa00','#9900cc'];
+  for (let i = 0; i < 40; i++) {
+    const s = document.createElement('span');
+    s.className = 'star';
+    s.textContent = chars[Math.floor(Math.random() * chars.length)];
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top  = (20 + Math.random() * 100) + '%';
+    s.style.fontSize = (7 + Math.random() * 15) + 'px';
+    s.style.color = colors[Math.floor(Math.random() * colors.length)];
+    const dur = 7 + Math.random() * 14;
+    s.style.animationDuration = dur + 's';
+    s.style.animationDelay = (-Math.random() * dur) + 's';
+    bg.appendChild(s);
+  }
+
+  const trailChars = ['★','✦','✧','☆','💜','🔥','💎'];
+  const trailCols  = ['#ff66ff','#cc00cc','#ffd700','#ff6600','#ff99ff'];
+  document.addEventListener('mousemove', function(e) {
+    if (Math.random() > 0.35) return;
+    const el = document.createElement('span');
+    el.className = 'cursor-star';
+    el.textContent = trailChars[Math.floor(Math.random() * trailChars.length)];
+    el.style.left = (e.clientX + Math.random()*12 - 6) + 'px';
+    el.style.top  = (e.clientY + Math.random()*12 - 6) + 'px';
+    el.style.color = trailCols[Math.floor(Math.random() * trailCols.length)];
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 700);
+  });
+});
+</script>
+</head>
+<body>
+
+<div class="stars-bg" id="stars-bg"></div>
+
+<div id="wrap">
+
+  <div id="hdr">
+    <div class="gothic-title">Cabr4</div>
+    <div class="hdr-sub">:: bug bounty :: cazando vulns :: scope: .* ::</div>
+  </div>
+
+  <div class="ticker-bar">
+    <marquee scrollamount="5">
+      ♦ todo lo que manda requests puede ser interceptado ♦ IDOR season ♦ no hay endpoint seguro ♦ burp suite abierto 24/7 ♦ bounty o bust ♦ scope: .* ♦ recon > todo ♦
+    </marquee>
+  </div>
+
+  <div class="back-bar">
+    <a class="back-link" href="index.html">← Perfil</a>
+    <a class="back-link" href="fotos.html">Fotos</a>
+    <a class="back-link" href="musica.html">Musica</a>
+    <a class="back-link active" href="bugbounty.html">Bug Bounty</a>
+    <a class="back-link" href="certificaciones.html">Certs</a>
+    <a class="back-link" href="ctf.html">CTF</a>
+  </div>
+
+  <div id="content">
+
+    <!-- PLATAFORMAS -->
+    <div class="pcard">
+      <div class="pcard-ttl">Plataformas</div>
+      <div class="pcard-body">
+
+        <div class="platform-card">
+          <div class="platform-icon">⬟</div>
+          <div class="platform-info">
+            <div class="platform-name">HackerOne</div>
+            <div class="platform-desc">
+              Mi perfil principal de bug bounty. Reportando vulns en programas públicos y privados.<br>
+              Focus: web apps, mobile apps, APIs.
+            </div>
+            <a class="platform-link" href="https://hackerone.com/cabr4" target="_blank">hackerone.com/cabr4 ↗</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="gif-sep"><img src="img/dividers/stars.gif" alt=""></div>
+
+    <!-- BUGS ENCONTRADOS -->
+    <div class="pcard">
+      <div class="pcard-ttl">Bugs Reportados <span class="ttl-note">(seleccion)</span></div>
+      <div class="pcard-body">
+
+        <div class="bug-card">
+          <div style="margin-bottom:5px">
+            <span class="btag t-res">RESOLVED</span>
+            <span class="btag t-crit">CRITICAL</span>
+            <span class="btag t-idor">IDOR → Account Takeover</span>
+          </div>
+          <div class="bug-target">[REDACTED].com</div>
+          <div class="bug-note">
+            endpoint: <code>/api/v1/users/{id}</code><br>
+            auth: <span class="strikethrough">REQUIRED</span> <span style="color:#ff3300;font-weight:bold">lol</span><br>
+            vector: cambiar ID en request → acceso a cualquier cuenta
+          </div>
+        </div>
+
+        <div class="bug-card med">
+          <div style="margin-bottom:5px">
+            <span class="btag t-tri">TRIAGED</span>
+            <span class="btag t-high">HIGH</span>
+            <span class="btag t-int">Intent Hijacking</span>
+          </div>
+          <div class="bug-target">[APP REDACTED] — Android</div>
+          <div class="bug-note">
+            vector: implicit intent → exported activity<br>
+            secure: <span class="strikethrough">YES</span> <span style="color:#ff7700;font-weight:bold">no</span><br>
+            acceso a funcionalidad interna desde app externa
+          </div>
+        </div>
+
+        <div class="bug-card med">
+          <div style="margin-bottom:5px">
+            <span class="btag t-res">RESOLVED</span>
+            <span class="btag t-high">HIGH</span>
+            <span class="btag t-priv">Privilege Escalation</span>
+          </div>
+          <div class="bug-target">[REDACTED] — Web App</div>
+          <div class="bug-note">
+            endpoint: <code>/admin/users/role</code><br>
+            validacion de rol: <span class="strikethrough">SERVER SIDE</span> <span style="color:#ff7700;font-weight:bold">solo client side</span><br>
+            cualquier usuario podia escalarse a admin modificando el body
+          </div>
+        </div>
+
+        <div class="bug-card" style="border-left-color:#ff66ff">
+          <div style="margin-bottom:5px">
+            <span class="btag t-res">RESOLVED</span>
+            <span class="btag t-med">MEDIUM</span>
+            <span class="btag t-xss">Stored XSS</span>
+          </div>
+          <div class="bug-target">[REDACTED] — CMS</div>
+          <div class="bug-note">
+            input: campo de nombre de usuario<br>
+            sanitizacion: <span class="strikethrough">SI</span> <span style="color:#ff66ff;font-weight:bold">nope</span><br>
+            <code>&lt;img src=x onerror=alert(document.cookie)&gt;</code> ejecutado en panel admin
+          </div>
+        </div>
+
+        <div class="bug-card" style="border-left-color:#0099ff;background:rgba(0,10,30,0.7)">
+          <div style="margin-bottom:5px">
+            <span class="btag t-dup">DUPLICATE</span>
+            <span class="btag t-high">HIGH</span>
+            <span class="btag t-rce">SSRF</span>
+          </div>
+          <div class="bug-target">[REDACTED] — API Gateway</div>
+          <div class="bug-note">
+            endpoint de webhook procesaba URLs sin validar<br>
+            acceso a metadata de instancia cloud 😢<br>
+            <span style="color:#555588;font-style:italic">// alguien me gano por 2 dias //</span>
+          </div>
+        </div>
+
+        <div style="font-size:10px;color:#440033;text-align:center;font-style:italic;margin-top:8px">
+          // targets y detalles redactados por politica de disclosure //
+        </div>
+
+      </div>
+    </div>
+
+    <div class="gif-sep"><img src="img/dividers/rainbow.gif" alt=""></div>
+
+    <!-- TECNICAS FAVORITAS -->
+    <div class="pcard">
+      <div class="pcard-ttl">Tecnicas Favoritas</div>
+      <div class="pcard-body">
+        <div class="tags-cloud">
+          <span class="ttag">🔎 IDOR</span>
+          <span class="ttag">📱 Android intents</span>
+          <span class="ttag">🌐 SSRF</span>
+          <span class="ttag">💉 XSS</span>
+          <span class="ttag">🔑 Auth bypass</span>
+          <span class="ttag">📡 API fuzzing</span>
+          <span class="ttag">🧩 Business logic</span>
+          <span class="ttag">🔓 Broken access control</span>
+          <span class="ttag">📦 APK reversing</span>
+          <span class="ttag">🕵️ Recon</span>
+          <span class="ttag">🔧 Frida hooking</span>
+          <span class="ttag">🧪 Burp Suite</span>
+          <span class="ttag">🐙 Ghidra</span>
+          <span class="ttag">📲 Mobile pentesting</span>
+          <span class="ttag">☁️ Cloud misconfigs</span>
+        </div>
+        <div style="text-align:right;font-size:11px;color:#440033;margin-top:8px;font-style:italic">
+          ✦ si manda requests, puede ser interceptado ✦
+        </div>
+      </div>
+    </div>
+
+  </div><!-- #content -->
+
+  <!-- BUTTON BAR -->
+  <div id="btn-bar">
+    <marquee behavior="alternate" scrollamount="3">
+      <a href="https://hackerone.com/cabr4"                  target="_blank"><img src="img/buttons/hackerone.gif"     alt="h1"></a>
+      <a href="https://www.youtube.com/@Cabr4wastaken"       target="_blank"><img src="img/buttons/bestvwmonitor.gif" alt="youtube"></a>
+      <a href="https://www.w3schools.com/html/"              target="_blank"><img src="img/buttons/html.gif"          alt="html"></a>
+      <img src="img/buttons/notepad4.gif" alt="">
+      <a href="https://www.youtube.com/watch?v=geGziPUQD2U" target="_blank"><img src="img/buttons/imhigh.gif"        alt=""></a>
+    </marquee>
+  </div>
+
+  <!-- FOOTER -->
+  <div id="footer">
+    hecho con ♥ y falta de sueño &nbsp;·&nbsp;
+    hosted on github pages &nbsp;·&nbsp;
+    Menos Violencia, Mas Perreo &nbsp;·&nbsp;
+    <span class="footer-bling">★ Always under construction ★</span>
+  </div>
+
+</div><!-- #wrap -->
+
+<div id="floaty-bugs">
+  <img src="img/ui/bugs.gif" alt="bugs">
+</div>
+
+<div id="pumas-fixed">
+  <img src="img/ui/pumas.png" alt="Pumas">
+</div>
+
+</body>
+</html>
