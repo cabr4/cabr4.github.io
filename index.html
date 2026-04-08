@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>cabr4 :: Mi Perfil :: perreo edition</title>
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Oswald:wght@400;700&family=Barlow+Condensed:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+/* ═══ BODY — dark purple starfield ═══ */
+body {
+  background-color: #0d0015;
+  background-image:
+    radial-gradient(ellipse at 15% 20%, rgba(120,0,180,0.35) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 75%, rgba(180,0,100,0.25) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 50%, rgba(50,0,110,0.45) 0%, transparent 70%);
+  font-family: 'Barlow Condensed', Arial, sans-serif;
+  font-size: 13px;
+  color: #ddbfff;
+  min-height: 100vh;
+  cursor: url('img/ui/cursor.png'), auto;
+}
+
+/* ═══ FLOATING STARS BG ═══ */
+.stars-bg {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.star {
+  position: absolute;
+  animation: floatStar linear infinite;
+  opacity: 0;
+  user-select: none;
+  pointer-events: none;
+}
+@keyframes floatStar {
+  0%   { opacity: 0; transform: translateY(0) rotate(0deg) scale(0.6); }
+  10%  { opacity: 1; }
+  90%  { opacity: 0.8; }
+  100% { opacity: 0; transform: translateY(-110vh) rotate(720deg) scale(1.3); }
+}
+
+/* ═══ CURSOR TRAIL ═══ */
+.cursor-star {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  font-size: 13px;
+  line-height: 1;
+  animation: cstar-fade 0.7s ease-out forwards;
+  user-select: none;
+}
+@keyframes cstar-fade {
+  0%   { opacity: 1; transform: translateY(0) scale(1.2); }
+  100% { opacity: 0; transform: translateY(-24px) scale(0.3); }
+}
+
+/* ═══ OUTER WRAPPER ═══ */
+#wrap {
+  max-width: 100%;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* ═══ HEADER ═══ */
+#hdr {
+  background: linear-gradient(180deg,
+    #0d0015 0%,
+    #200040 30%,
+    #3d0066 55%,
+    #200040 80%,
+    #0d0015 100%);
+  border-bottom: 3px solid #cc00cc;
+  border-top: 3px solid #ff6600;
+  padding: 14px 20px 18px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+#hdr::before, #hdr::after {
+  content: '★  ✦  ★  ✦  ★  ✦  ★  ✦  ★  ✦  ★  ✦  ★  ✦  ★  ✦  ★  ✦  ★  ✦  ★  ✦';
+  display: block;
+  font-size: 10px;
+  color: rgba(200,0,200,0.55);
+  letter-spacing: 5px;
+}
+#hdr::before { margin-bottom: 10px; }
+#hdr::after  { margin-top: 10px; }
+
+/* Gothic title */
+.gothic-title {
+  font-family: 'UnifrakturMaguntia', serif;
+  font-size: 80px;
+  line-height: 1;
+  background: linear-gradient(180deg, #ffcc00 0%, #ff9900 30%, #ff6600 65%, #ffd700 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 14px rgba(204,0,204,0.9)) drop-shadow(3px 3px 0 rgba(0,0,0,0.6));
+  animation: title-glow 3s ease-in-out infinite;
+}
+@keyframes title-glow {
+  0%,100% { filter: drop-shadow(0 0 14px rgba(204,0,204,0.9)) drop-shadow(3px 3px 0 rgba(0,0,0,0.6)); }
+  50%      { filter: drop-shadow(0 0 22px rgba(255,100,0,0.95)) drop-shadow(3px 3px 0 rgba(0,0,0,0.6)); }
+}
+
+.hdr-sub {
+  font-family: 'Oswald', sans-serif;
+  font-size: 12px;
+  color: #cc66ff;
+  letter-spacing: 4px;
+  margin-top: 5px;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px #cc00cc;
+}
+
+.online-badge {
+  display: inline-block;
+  background: #001a00;
+  border: 1px solid #00aa00;
+  color: #00ff00;
+  font-size: 10px;
+  padding: 2px 12px;
+  margin-top: 7px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-family: 'Oswald', sans-serif;
+  box-shadow: 0 0 8px rgba(0,255,0,0.3);
+}
+.online-badge::before { content: '● '; color: #00ff00; }
+
+/* ═══ TICKER ═══ */
+.ticker-bar {
+  background: linear-gradient(90deg, #200033, #440033, #330044, #200033);
+  border-top: 1px solid #880066;
+  border-bottom: 2px solid #cc00cc;
+  padding: 5px 0;
+}
+.ticker-bar marquee {
+  color: #ff99ee;
+  font-family: 'Oswald', sans-serif;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* ═══ PROFILE TABS ═══ */
+.tabs-bar {
+  background: #120020;
+  border-bottom: 2px solid #550055;
+  padding: 0 10px;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+}
+.tab {
+  color: #9966bb;
+  font-family: 'Oswald', sans-serif;
+  font-size: 12px;
+  padding: 7px 16px;
+  border-right: 1px solid #330033;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.1s, color 0.1s;
+}
+.tab:hover, .tab.active {
+  background: #300055;
+  color: #ff66ff;
+  text-shadow: 0 0 8px #cc00cc;
+}
+
+/* ═══ MAIN TABLE ═══ */
+#body-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(10,0,20,0.92);
+}
+#body-table > tbody > tr > td { vertical-align: top; }
+
+/* ═══ SIDEBAR ═══ */
+#sidebar {
+  width: 260px;
+  background: linear-gradient(180deg, #140025 0%, #0a0015 100%);
+  border-right: 2px solid #550055;
+  padding: 10px 8px 16px;
+}
+
+/* Profile photo box */
+.photo-box {
+  background: #0d0020;
+  border: 2px solid #cc00cc;
+  box-shadow: 0 0 12px rgba(200,0,200,0.4);
+  padding: 4px;
+  text-align: center;
+  margin-bottom: 7px;
+}
+.photo-box img {
+  width: 100%;
+  max-width: 220px;
+  image-rendering: pixelated;
+  display: block;
+  margin: 0 auto;
+}
+.photo-count {
+  font-size: 10px;
+  color: #9966bb;
+  margin-top: 4px;
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* Profile URL */
+.profile-url {
+  font-size: 10px;
+  color: #9966bb;
+  text-align: center;
+  padding: 5px 4px;
+  border-bottom: 1px solid #330033;
+  margin-bottom: 7px;
+  word-break: break-all;
+  line-height: 1.6;
+}
+.profile-url span { color: #cc99ff; }
+
+/* Fives / perreo level */
+.fives-box {
+  background: rgba(40,0,60,0.6);
+  border: 1px solid #660066;
+  padding: 7px 8px;
+  margin: 7px 0;
+  text-align: center;
+}
+.fives-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 10px;
+  color: #ff66ff;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 5px;
+  border-bottom: 1px solid #440044;
+  padding-bottom: 4px;
+  text-shadow: 0 0 8px #cc00cc;
+}
+.fives-icons { font-size: 18px; letter-spacing: 3px; }
+.fives-count { font-size: 10px; color: #9966bb; margin-top: 4px; }
+
+/* Stats box */
+.stats-box {
+  background: rgba(30,0,50,0.7);
+  border: 1px solid #550055;
+  padding: 6px 8px;
+  margin: 7px 0;
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+}
+.stat-line {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+  color: #9966bb;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 1px dotted #330033;
+}
+.stat-line:last-child { border-bottom: none; }
+.stat-num {
+  color: #ff6600;
+  font-weight: bold;
+  text-shadow: 0 0 6px rgba(255,102,0,0.7);
+}
+
+/* Info box */
+.info-box {
+  background: rgba(25,0,45,0.7);
+  border: 1px solid #550055;
+  padding: 7px 8px;
+  margin: 7px 0;
+  font-size: 11px;
+}
+.ib-title {
+  font-family: 'Oswald', sans-serif;
+  color: #ff66ff;
+  font-size: 11px;
+  border-bottom: 1px solid #550055;
+  padding-bottom: 3px;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 0 8px #cc00cc;
+}
+.ib-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+  border-bottom: 1px dotted rgba(80,0,80,0.4);
+}
+.ib-row:last-child { border-bottom: none; }
+.ib-key { color: #886699; }
+.ib-val { color: #ff99ff; font-weight: bold; }
+
+/* Song widget — main content */
+.song-card {
+  background: linear-gradient(180deg, rgba(28,0,52,0.95) 0%, rgba(12,0,26,0.95) 100%);
+  border: 1px solid #cc00cc;
+  box-shadow: 0 0 14px rgba(200,0,200,0.3);
+  margin-bottom: 10px;
+}
+.song-card-ttl {
+  font-family: 'UnifrakturMaguntia', serif;
+  font-size: 22px;
+  padding: 5px 13px 4px;
+  background: linear-gradient(90deg, #2a0055, #550033, #2a0055);
+  color: #ff99ff;
+  border-bottom: 1px solid #cc00cc;
+  text-shadow: 0 0 10px rgba(200,0,200,0.7);
+}
+.song-card iframe {
+  width: 100%;
+  height: 80px;
+  border: none;
+  display: block;
+}
+
+/* Sidebar links */
+.sb-link {
+  display: block;
+  color: #9966bb;
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  text-decoration: none;
+  padding: 3px 5px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 1px dotted #330033;
+}
+.sb-link:hover { color: #ff66ff; text-shadow: 0 0 6px #cc00cc; }
+
+/* Scatter gifs sidebar */
+.sb-gifs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px 0;
+}
+.sb-gifs img { image-rendering: pixelated; }
+
+/* ═══ MAIN CONTENT ═══ */
+#content {
+  padding: 10px 12px;
+  background: rgba(8,0,18,0.85);
+}
+
+/* ═══ RIGHT SIDEBAR ═══ */
+#rsidebar {
+  width: 230px;
+  background: linear-gradient(180deg, #140025 0%, #0a0015 100%);
+  border-left: 2px solid #550055;
+  padding: 10px 8px 16px;
+  vertical-align: top;
+}
+.rsb-card {
+  background: linear-gradient(180deg, rgba(28,0,52,0.95) 0%, rgba(12,0,26,0.95) 100%);
+  border: 1px solid #550055;
+  margin-bottom: 10px;
+}
+.rsb-ttl {
+  font-family: 'UnifrakturMaguntia', serif;
+  font-size: 18px;
+  padding: 4px 10px 3px;
+  background: linear-gradient(90deg, #2a0055, #550033, #2a0055);
+  color: #ff99ff;
+  border-bottom: 1px solid #cc00cc;
+  text-shadow: 0 0 10px rgba(200,0,200,0.7);
+}
+.rsb-body { padding: 8px 10px; }
+.rsb-quote {
+  border-left: 3px solid #cc00cc;
+  padding: 8px 10px;
+  font-size: 11px;
+  line-height: 1.9;
+  color: #bb99cc;
+  font-style: italic;
+  position: relative;
+  background: rgba(35,0,60,0.4);
+  margin: 0;
+}
+.rsb-quote strong { color: #ff66ff; font-style: normal; }
+.rsb-quote-src { text-align: right; font-size: 9px; color: #550055; margin-top: 4px; font-style: normal; }
+
+/* Section card */
+.pcard {
+  background: linear-gradient(180deg, rgba(28,0,52,0.95) 0%, rgba(12,0,26,0.95) 100%);
+  border: 1px solid #550055;
+  margin-bottom: 10px;
+  position: relative;
+  overflow: hidden;
+}
+.pcard::after {
+  content: '★';
+  position: absolute;
+  right: 9px; top: 5px;
+  color: rgba(180,0,180,0.25);
+  font-size: 18px;
+  pointer-events: none;
+}
+
+/* Card title — gothic */
+.pcard-ttl {
+  font-family: 'UnifrakturMaguntia', serif;
+  font-size: 22px;
+  padding: 5px 13px 4px;
+  background: linear-gradient(90deg, #2a0055, #550033, #2a0055);
+  color: #ff99ff;
+  border-bottom: 1px solid #cc00cc;
+  text-shadow: 0 0 10px rgba(200,0,200,0.7);
+  letter-spacing: 1px;
+}
+.pcard-ttl .ttl-note {
+  font-family: 'Oswald', sans-serif;
+  font-size: 12px;
+  color: #886699;
+  font-weight: normal;
+}
+
+.pcard-body { padding: 10px 12px; }
+
+/* Profile info grid (Hi5 style) */
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: #440044;
+  border: 1px solid #440044;
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+.pg-cell {
+  background: rgba(15,0,30,0.95);
+  padding: 6px 10px;
+}
+.pg-label {
+  color: #7755aa;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: 'Oswald', sans-serif;
+}
+.pg-val { color: #ff99ff; font-weight: bold; margin-top: 2px; }
+
+/* About text */
+.about-text {
+  background: rgba(40,0,70,0.4);
+  border-left: 3px solid #cc00cc;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #ddbfff;
+  line-height: 2;
+  margin-bottom: 8px;
+}
+.about-text strong { color: #ff66ff; }
+
+/* Star separator */
+.star-sep {
+  text-align: center;
+  color: #440044;
+  font-size: 13px;
+  letter-spacing: 8px;
+  padding: 5px 0;
+  text-shadow: 0 0 6px rgba(150,0,150,0.4);
+}
+
+/* Updates box */
+.updates-box {
+  max-height: 140px;
+  overflow-y: auto;
+  font-size: 11px;
+  color: #9966bb;
+  scrollbar-width: thin;
+  scrollbar-color: #660066 #0d001a;
+}
+.update-item {
+  padding: 4px 0;
+  border-bottom: 1px dotted #330033;
+  line-height: 1.7;
+}
+.update-item:last-child { border-bottom: none; }
+.update-item strong { color: #ff66ff; }
+.update-time { opacity: 0.45; }
+
+/* Diary entries */
+.diary-entry {
+  padding: 8px 0;
+  border-bottom: 1px dashed #330033;
+  font-size: 13px;
+  line-height: 1.85;
+  color: #ddbfff;
+}
+.diary-entry:last-child { border-bottom: none; }
+.diary-date {
+  font-family: 'Oswald', sans-serif;
+  font-size: 10px;
+  color: #fff;
+  background: linear-gradient(90deg, #660033, #330066);
+  padding: 2px 9px;
+  display: inline-block;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* Bug cards */
+.bug-card {
+  background: rgba(25,0,5,0.7);
+  border-left: 4px solid #ff3300;
+  padding: 8px 11px;
+  margin-bottom: 8px;
+}
+.bug-card:last-child { margin-bottom: 0; }
+.btag {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: bold;
+  margin-right: 4px;
+  margin-bottom: 4px;
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 1px;
+}
+.t-res  { background: #0d2200; color: #66ff00; border: 1px solid #224400; }
+.t-tri  { background: #221100; color: #ffaa00; border: 1px solid #553300; }
+.t-idor { background: #220000; color: #ff3300; border: 1px solid #550000; }
+.t-int  { background: #221100; color: #ff7700; border: 1px solid #553300; }
+.bug-target { color: #ff9999; font-weight: bold; font-size: 13px; font-family: 'Oswald', sans-serif; }
+.bug-note { font-size: 11px; color: #886666; margin-top: 3px; }
+code { font-size: 10px; background: rgba(0,0,0,0.6); padding: 1px 4px; color: #ff9966; border-radius: 2px; }
+.strikethrough { text-decoration: line-through; }
+
+/* Tags cloud */
+.tags-cloud { display: flex; flex-wrap: wrap; gap: 6px; }
+.ttag {
+  background: rgba(60,0,80,0.55);
+  border: 1px solid #550055;
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 12px;
+  color: #bb99dd;
+  transition: border-color 0.1s, color 0.1s;
+}
+.ttag:hover { border-color: #cc00cc; color: #ff99ff; }
+.ttag:nth-child(3n)   { border-color: #883300; color: #ff9966; background: rgba(60,20,0,0.4); }
+.ttag:nth-child(5n)   { border-color: #886600; color: #ffcc66; background: rgba(50,35,0,0.4); }
+.ttag:nth-child(3n):hover { border-color: #ff6600; color: #ffcc00; }
+.ttag:nth-child(5n):hover { border-color: #ffcc00; color: #ffffff; }
+
+/* Friends grid */
+.friends-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 6px 0;
+}
+.friend-item { text-align: center; width: 70px; }
+.friend-avatar {
+  width: 62px;
+  height: 62px;
+  background: linear-gradient(135deg, #220044, #440022);
+  border: 2px solid #660066;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+.friend-avatar:hover { border-color: #cc00cc; box-shadow: 0 0 8px rgba(200,0,200,0.5); }
+.friend-avatar img { width: 100%; height: 100%; object-fit: cover; image-rendering: pixelated; }
+.friend-name { font-size: 10px; color: #9966bb; margin-top: 3px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Scraps */
+.scrap {
+  background: rgba(18,0,35,0.8);
+  border: 1px solid #440044;
+  padding: 8px 10px;
+  margin-bottom: 7px;
+}
+.scrap:last-child { margin-bottom: 0; }
+.scrap-from {
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  color: #ff66ff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+  text-shadow: 0 0 6px rgba(200,0,200,0.4);
+}
+.scrap-text { font-size: 12px; color: #ddbfff; line-height: 1.75; }
+
+/* Contact boxes */
+.cbox {
+  display: inline-block;
+  background: rgba(35,0,55,0.6);
+  border: 1px solid #550055;
+  padding: 8px 14px;
+  margin: 4px;
+  border-radius: 4px;
+  transition: border-color 0.1s;
+}
+.cbox:hover { border-color: #cc00cc; }
+.cbox .clbl { font-size: 9px; color: #775599; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 3px; font-family: 'Oswald', sans-serif; }
+.cbox a { color: #ff66ff; font-weight: bold; text-decoration: none; font-family: 'Oswald', sans-serif; }
+.cbox a:hover { text-decoration: underline; color: #ff99ff; }
+
+/* Quote block */
+.quote-block {
+  border: 1px dashed #550055;
+  background: rgba(35,0,60,0.4);
+  padding: 13px 18px 13px 30px;
+  margin: 10px 0;
+  font-size: 12px;
+  line-height: 2;
+  color: #bb99cc;
+  font-style: italic;
+  position: relative;
+}
+.quote-block::before {
+  content: '\201C';
+  font-family: 'UnifrakturMaguntia', serif;
+  font-size: 70px;
+  color: rgba(180,0,180,0.2);
+  position: absolute;
+  top: -10px; left: 8px;
+  line-height: 1;
+  font-style: normal;
+}
+.quote-block strong { color: #ff66ff; font-style: normal; }
+.quote-src { text-align: right; font-size: 10px; color: #550055; margin-top: 5px; font-style: normal; }
+
+/* GIF chaos row */
+.gif-chaos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 5px;
+  padding: 10px 0;
+}
+.gif-chaos img { image-rendering: pixelated; }
+.gif-chaos img:nth-child(odd)  { transform: rotate(-5deg); }
+.gif-chaos img:nth-child(even) { transform: rotate(5deg); margin-bottom: -4px; }
+.gif-chaos img:nth-child(3n)   { transform: rotate(0deg) scale(1.05); }
+
+/* ═══ GIF DIVIDER (div_stars.gif style) ═══ */
+.gif-sep {
+  text-align: center;
+  padding: 2px 0;
+  margin: 2px 0;
+  overflow: hidden;
+  line-height: 0;
+}
+.gif-sep img { image-rendering: pixelated; height: 14px; width: 100%; object-fit: cover; }
+
+/* ═══ 88×31 BUTTON BAR ═══ */
+#btn-bar {
+  background: #100020;
+  border-top: 2px solid #cc00cc;
+  border-bottom: 2px solid #550055;
+  padding: 7px 0;
+  overflow: hidden;
+}
+#btn-bar img {
+  height: 31px;
+  width: auto;
+  margin: 0 3px;
+  image-rendering: pixelated;
+  border: 1px solid #440044;
+  vertical-align: middle;
+  opacity: 0.8;
+  transition: opacity 0.1s, border-color 0.1s;
+}
+#btn-bar img:hover { opacity: 1; border-color: #cc00cc; }
+
+/* ═══ FOOTER ═══ */
+#footer {
+  background: linear-gradient(90deg, #0d0015, #200033, #0d0015);
+  border-top: 2px solid #550055;
+  text-align: center;
+  padding: 12px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  color: #7755aa;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+#footer a { color: #ff66ff; text-decoration: none; }
+#footer a:hover { text-decoration: underline; }
+.footer-bling {
+  background: linear-gradient(90deg, #ffd700, #ff9900, #ffd700, #ff6600, #ffd700);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: bling-shine 2s linear infinite;
+  font-weight: bold;
+}
+@keyframes bling-shine {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+/* ═══ FLOATING ELEMENTS ═══ */
+#floaty-bugs {
+  position: fixed;
+  bottom: 15px; right: 15px;
+  z-index: 999;
+  pointer-events: none;
+  animation: bugs-bob 2.8s ease-in-out infinite;
+}
+#floaty-bugs img { width: 80px; image-rendering: pixelated; }
+@keyframes bugs-bob {
+  0%,100% { transform: translateY(0) rotate(0deg); }
+  40%      { transform: translateY(-10px) rotate(-4deg); }
+  70%      { transform: translateY(-5px) rotate(3deg); }
+}
+
+
+/* Pumas logo fixed */
+#pumas-fixed {
+  position: fixed;
+  bottom: 15px; left: 15px;
+  z-index: 999;
+  pointer-events: none;
+  animation: bugs-bob 2.8s ease-in-out infinite;
+}
+#pumas-fixed img {
+  width: 100px;
+  image-rendering: pixelated;
+  animation: pumas-spin 3s linear infinite;
+}
+@keyframes pumas-spin {
+  from { transform: rotateY(0deg); }
+  to   { transform: rotateY(360deg); }
+}
+
+/* Responsive */
+@media(max-width:820px) {
+  #rsidebar { display: none; }
+}
+@media(max-width:620px) {
+  #sidebar { display: none; }
+  .profile-grid { grid-template-columns: 1fr; }
+  .gothic-title { font-size: 56px; }
+}
+</style>
+
+<script>
+window.addEventListener('load', function () {
+
+  /* ── Floating background stars ── */
+  const bg = document.getElementById('stars-bg');
+  const chars = ['★','✦','✧','☆','✩','✫','✬','✭','✮','✯','⋆','◆'];
+  const colors = ['#cc00cc','#ff66cc','#ff6600','#ffd700','#ff33ff','#ffaa00','#9900cc'];
+  for (let i = 0; i < 40; i++) {
+    const s = document.createElement('span');
+    s.className = 'star';
+    s.textContent = chars[Math.floor(Math.random() * chars.length)];
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top  = (20 + Math.random() * 100) + '%';
+    s.style.fontSize = (7 + Math.random() * 15) + 'px';
+    s.style.color = colors[Math.floor(Math.random() * colors.length)];
+    const dur = 7 + Math.random() * 14;
+    s.style.animationDuration = dur + 's';
+    s.style.animationDelay = (-Math.random() * dur) + 's';
+    bg.appendChild(s);
+  }
+
+  /* ── Cursor star trail ── */
+  const trailChars = ['★','✦','✧','☆','💜','🔥','💎'];
+  const trailCols  = ['#ff66ff','#cc00cc','#ffd700','#ff6600','#ff99ff'];
+  document.addEventListener('mousemove', function(e) {
+    if (Math.random() > 0.35) return;
+    const el = document.createElement('span');
+    el.className = 'cursor-star';
+    el.textContent = trailChars[Math.floor(Math.random() * trailChars.length)];
+    el.style.left = (e.clientX + Math.random()*12 - 6) + 'px';
+    el.style.top  = (e.clientY + Math.random()*12 - 6) + 'px';
+    el.style.color = trailCols[Math.floor(Math.random() * trailCols.length)];
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 700);
+  });
+
+  /* ── Visitor counter ── */
+  let v = parseInt(localStorage.getItem('cabr4_v3_visits') || '0', 10);
+  v++;
+  localStorage.setItem('cabr4_v3_visits', v);
+  document.getElementById('vctr').textContent = String(v).padStart(6, '0');
+
+  /* ── Uptime ── */
+  const born = new Date('2023-01-01');
+  function tick() {
+    const diff = Date.now() - born;
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const el = document.getElementById('uptime');
+    if (el) el.textContent = d + 'd ' + h + 'h ' + m + 'm';
+  }
+  tick();
+  setInterval(tick, 60000);
+});
+</script>
+</head>
+<body>
+
+<!-- Floating stars background -->
+<div class="stars-bg" id="stars-bg"></div>
+
+<div id="wrap">
+
+  <!-- ══ HEADER ══ -->
+  <div id="hdr">
+    <div class="gothic-title">Cabr4</div>
+    <div class="hdr-sub">:: mi perfil :: pentester :: bug hunter :: detras de un teclado ::</div>
+    <div><span class="online-badge">Actualmente en linea</span></div>
+  </div>
+
+  <!-- ══ TICKER ══ -->
+  <div class="ticker-bar">
+    <marquee scrollamount="5">
+      ♦ Hack the world! ♦ scope: .* ♦ reality.dll not found - proceeding anyway ♦ Chuleria en pote ♦ rakata rakata ♦ detras de un teclado desde que tengo memoria ♦ lo que paso, paso ♦ AppSec engineer by day, bug hunter by night ♦ gasolina ♦ la la la la ♦ Aparentemente ♦ hunting bugs, no excusas ♦
+    </marquee>
+  </div>
+
+  <!-- ══ PROFILE TABS ══ -->
+  <div class="tabs-bar">
+    <a class="tab active" href="#s-perfil">Perfil</a>
+    <a class="tab" href="fotos.html">Fotos</a>
+    <a class="tab" href="musica.html">Musica</a>
+    <a class="tab" href="#s-scraps">Scraps</a>
+    <a class="tab" href="#s-amigos">Amigos</a>
+    <a class="tab" href="#s-gustos">Favoritos</a>
+  </div>
+
+  <!-- ══ MAIN TABLE ══ -->
+  <table id="body-table" cellspacing="0" cellpadding="0">
+  <tbody><tr>
+
+    <!-- ── LEFT SIDEBAR ── -->
+    <td id="sidebar">
+
+      <!-- Photo -->
+      <div class="photo-box">
+        <img src="perfil.png" alt="cabr4">
+        <div class="photo-count">★ 14 fotos ★</div>
+      </div>
+
+      <!-- Profile URL -->
+      <div class="profile-url">
+        http://cabr4.com<br>
+        <span>— Hack the world! —</span>
+      </div>
+
+      <!-- Perreo Level / Fives -->
+      <div class="fives-box">
+        <div class="fives-title">Level:</div>
+        <div class="fives-icons">💎🔥💎🔥💎</div>
+        <div class="fives-count">42 fives recibidos</div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-box">
+        <div class="stat-line"><span>amigos:</span><span class="stat-num">64</span></div>
+        <div class="stat-line"><span>fives:</span><span class="stat-num">42</span></div>
+        <div class="stat-line"><span>scraps:</span><span class="stat-num">3</span></div>
+        <div class="stat-line"><span>visitas:</span><span class="stat-num" id="vctr">000000</span></div>
+      </div>
+
+      <!-- Sys Info -->
+      <div class="info-box">
+        <div class="ib-title">sys.info</div>
+        <div class="ib-row"><span class="ib-key">handle:</span><span class="ib-val">cabr4</span></div>
+        <div class="ib-row"><span class="ib-key">rol:</span><span class="ib-val">AppSec Eng</span></div>
+        <div class="ib-row"><span class="ib-key">focus:</span><span class="ib-val">hw+mobile+web</span></div>
+        <div class="ib-row"><span class="ib-key">status:</span><span class="ib-val">hunting 🎯</span></div>
+        <div class="ib-row"><span class="ib-key">uptime:</span><span class="ib-val" id="uptime">—</span></div>
+      </div>
+
+      <!-- External links -->
+      <div style="margin-top:8px;border-top:1px solid #330033;padding-top:8px">
+        <a class="sb-link" href="https://www.youtube.com/@Cabr4wastaken" target="_blank">▶ youtube ↗</a>
+        <a class="sb-link" href="https://github.com/cabr4"               target="_blank">◎ github ↗</a>
+        <a class="sb-link" href="https://hackerone.com/cabr4"             target="_blank">⬟ hackerone ↗</a>
+      </div>
+
+
+
+      <!-- Pumas -->
+      <div style="text-align:center;margin-top:8px;opacity:0.5">
+        <img src="img/ui/pumas.png" alt="Pumas" style="width:58px;image-rendering:pixelated">
+      </div>
+
+    </td>
+
+    <!-- ── MAIN CONTENT ── -->
+    <td id="content">
+
+      <!-- PERFIL INFO -->
+      <div class="pcard" id="s-perfil">
+        <div class="pcard-ttl">Perfil <span class="ttl-note">(192 views)</span></div>
+        <div class="pcard-body">
+
+          <div class="profile-grid">
+            <div class="pg-cell">
+              <div class="pg-label">Pronombres / Edad</div>
+              <div class="pg-val">He,Him / 25</div>
+            </div>
+            <div class="pg-cell">
+              <div class="pg-label">Ubicacion / Hometown</div>
+              <div class="pg-val">Mexico</div>
+            </div>
+            <div class="pg-cell">
+              <div class="pg-label">Build / Rol</div>
+              <div class="pg-val">Tank / AppSec Eng</div>
+            </div>
+            <div class="pg-cell">
+              <div class="pg-label">Buscando</div>
+              <div class="pg-val">Vulnerabilidades</div>
+            </div>
+          </div>
+
+          <div class="about-text">
+            Hola!! soy <strong>cabr4.</strong><br>
+            hago cosas rotas funcionar. y cosas que funcionan, romperse.<br>
+            a veces las dos al mismo tiempo.<br><br>
+            solo soy alguien que <strong>disfruta mucho usar computadoras</strong>.<br>
+            <em style="color:#9966bb">a veces no se si estoy hackeando el sistema, o el sistema me hackea a mi.</em><br><br>
+            bienvenido a mi rincon del internet 💜
+          </div>
+
+          <div style="font-size:11px;color:#7755aa;font-style:italic;padding:4px 0;text-align:center">
+            ✦ todo lo que manda requests puede ser interceptado ✦
+          </div>
+
+        </div>
+      </div>
+
+      <div class="gif-sep"><img src="img/dividers/stars.gif" alt=""></div>
+
+      <!-- ACTUALIZACIONES -->
+      <div class="pcard">
+        <div class="pcard-ttl">Actualizaciones</div>
+        <div class="pcard-body">
+          <div class="updates-box">
+            <div class="update-item"><strong>cabr4</strong> actualizo su pagina de perfil. <span class="update-time">hace 2 dias · 11:59 PM</span></div>
+            <div class="update-item"><strong>cabr4</strong> recibio su primer bounty en Hackerone 🎉 <span class="update-time">hace 3 meses</span></div>
+            <div class="update-item"><strong>cabr4</strong> cambio de trabajo — de Pentester a AppSec Engineer. <span class="update-time">hace 10 meses</span></div>
+            <div class="update-item"><strong>cabr4</strong> encontro una vuln triaged en Hackerone. <span class="update-time">hace 14 meses</span></div>
+            <div class="update-item"><strong>cabr4</strong> agrego a papichulo666 como nuevo amigo. <span class="update-time">hace 14 meses</span></div>
+            <div class="update-item"><strong>cabr4</strong> se unio a Hi5. <span class="update-time">hace mucho tiempo</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gif-sep"><img src="img/dividers/eyes.gif" alt=""></div>
+
+      <!-- PROYECTOS -->
+      <div class="pcard">
+        <div class="pcard-ttl">Proyectos</div>
+        <div class="pcard-body">
+
+          <div class="diary-entry">
+            <div class="diary-date">YouTube</div>
+            <div><a href="https://www.youtube.com/@Cabr4wastaken" target="_blank" style="color:#ff66ff;font-weight:bold">@Cabr4wastaken</a> — Canal de youtube. Subo videos cuando recuerdo que existe.</div>
+          </div>
+          <div class="diary-entry">
+            <div class="diary-date">HackerOne</div>
+            <div><a href="https://hackerone.com/cabr4" target="_blank" style="color:#ff66ff;font-weight:bold">hackerone / cabr4</a> — Bug bounty hunting. Busco vulnerabilidades de vez en cuando.</div>
+          </div>
+          <div class="diary-entry">
+            <div class="diary-date">GitHub</div>
+            <div><a href="https://github.com/cabr4" target="_blank" style="color:#ff66ff;font-weight:bold">github / cabr4</a> — En teoria deberia haber repos interesantes. <span style="color:#554455">(Spoiler: no los hay)</span></div>
+          </div>
+          <div class="diary-entry" style="border-bottom:none">
+            <div class="diary-date">Blog</div>
+            <div><span style="color:#554455;font-weight:bold">blog.exe</span> — Blog donde publico solo cuando recuerdo que tengo uno.</div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="gif-sep"><img src="img/dividers/rainbow.gif" alt=""></div>
+
+      <!-- BUGS ENCONTRADOS -->
+      <div class="pcard">
+        <div class="pcard-ttl">Ultimos Bugs Reportados</div>
+        <div class="pcard-body">
+
+          <div class="bug-card">
+            <div style="margin-bottom:5px">
+              <span class="btag t-res">RESOLVED</span>
+              <span class="btag t-idor">IDOR → Account Takeover</span>
+            </div>
+            <div class="bug-target">[REDACTED].com</div>
+            <div class="bug-note">
+              endpoint: <code>/api/v1/users/{id}</code><br>
+              auth: <span class="strikethrough">REQUIRED</span> <span style="color:#ff3300;font-weight:bold">lol</span>
+            </div>
+          </div>
+
+          <div class="bug-card" style="border-left-color:#ff7700">
+            <div style="margin-bottom:5px">
+              <span class="btag t-tri">TRIAGED</span>
+              <span class="btag t-int">Intent Hijacking</span>
+            </div>
+            <div class="bug-target">[APP REDACTED]</div>
+            <div class="bug-note">
+              vector: implicit intent → exported activity<br>
+              secure: <span class="strikethrough">YES</span> <span style="color:#ff7700;font-weight:bold">no</span>
+            </div>
+          </div>
+
+          <div style="font-size:10px;color:#440033;text-align:center;font-style:italic;margin-top:6px">
+            // todo lo que manda requests puede ser interceptado //
+          </div>
+
+        </div>
+      </div>
+
+      <div class="gif-sep"><img src="img/dividers/hazard.gif" alt=""></div>
+
+      <!-- GUSTOS -->
+      <div class="pcard" id="s-gustos">
+        <div class="pcard-ttl">Cosas que me gustan</div>
+        <div class="pcard-body">
+
+          <div class="tags-cloud">
+            <span class="ttag">🐙 ghidra</span>
+            <span class="ttag">🔥 reggaeton</span>
+            <span class="ttag">📼 VHS glitches</span>
+            <span class="ttag">💿 Plan B</span>
+            <span class="ttag">🔎 frida</span>
+            <span class="ttag">👟 moda</span>
+            <span class="ttag">📱 android RE</span>
+            <span class="ttag">💎 Wisin y Yandel</span>
+            <span class="ttag">🌌 neocities</span>
+            <span class="ttag">🖥 terminales viejas</span>
+            <span class="ttag">🧠 ensamblador</span>
+            <span class="ttag">💾 floppies</span>
+            <span class="ttag">🐛 bug bounty</span>
+            <span class="ttag">✨ Bad Bunny</span>
+            <span class="ttag">🐧 linux</span>
+            <span class="ttag">🌙 Streetwear</span>
+            <span class="ttag">🎵 Cachirula</span>
+            <span class="ttag">🐐 cabras</span>
+            <span class="ttag">🖨 impresoras que fallan</span>
+            <span class="ttag">💛 Arcangel</span>
+          </div>
+
+          <div style="text-align:right;font-size:11px;color:#440033;margin-top:6px;font-style:italic">
+            ✦ tambien me gustan los sitios que no sirven para nada, solo para existir ✦
+          </div>
+
+        </div>
+      </div>
+
+      <div class="gif-sep"><img src="img/dividers/dna.gif" alt=""></div>
+
+      <!-- SCRAPS -->
+      <div class="pcard" id="s-scraps">
+        <div class="pcard-ttl">Scraps <span class="ttl-note">(ver todos)</span></div>
+        <div class="pcard-body">
+
+          <div class="scrap">
+            <div class="scrap-from">wisin_fan_04 dice:</div>
+            <div class="scrap-text">oe cabr4!! q buena pagina bro, dale pone mas musica de WY 🔥🔥 rakata rakata!!</div>
+          </div>
+          <div class="scrap">
+            <div class="scrap-from">planb_forever dice:</div>
+            <div class="scrap-text">xq no tienes el reggaeton de plan b en tu perfil?? ponle "ella no sigue modas" papiii dale</div>
+          </div>
+          <div class="scrap">
+            <div class="scrap-from">papichulo666 dice:</div>
+            <div class="scrap-text">oye ese bug del IDOR estuvo horrible!! No le sabes al hacking champagne, lit solo cambiaste un numero</div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="gif-sep"><img src="img/dividers/stars.gif" alt=""></div>
+
+      <!-- AMIGOS -->
+      <div class="pcard" id="s-amigos">
+        <div class="pcard-ttl">Amigos <span class="ttl-note">(ver los 64)</span></div>
+        <div class="pcard-body">
+          <div class="friends-grid">
+            <div class="friend-item">
+              <a href="https://glitchboi.xyz/" target="_blank" style="text-decoration:none">
+                <div class="friend-avatar"><img src="amigos/bugs.gif" alt="glitchboi"></div>
+                <div class="friend-name">glitchboi</div>
+              </a>
+            </div>
+            <div class="friend-item">
+              <a href="https://www.soqui.dev/" target="_blank" style="text-decoration:none">
+                <div class="friend-avatar"><img src="amigos/UsEzIt8U_400x400.jpg" alt="soqui"></div>
+                <div class="friend-name">soqui</div>
+              </a>
+            </div>
+            <div class="friend-item">
+              <a href="https://www.n0r37urn.com/" target="_blank" style="text-decoration:none">
+                <div class="friend-avatar"><img src="amigos/esponja.gif" alt="n0r37urn"></div>
+                <div class="friend-name">n0r37urn</div>
+              </a>
+            </div>
+            <div class="friend-item">
+              <a href="https://www.youtube.com/@D1ie3z" target="_blank" style="text-decoration:none">
+                <div class="friend-avatar"><img src="amigos/bb3f98bff64cb277ee2a52f7c5325ff3.jpg" alt="D1ie3z"></div>
+                <div class="friend-name">D1ie3z</div>
+              </a>
+            </div>
+            <div class="friend-item">
+              <a href="https://www.youtube.com/@xchg2pwn" target="_blank" style="text-decoration:none">
+                <div class="friend-avatar"><img src="amigos/piolin.gif" alt="xchg2pwn"></div>
+                <div class="friend-name">xchg2pwn</div>
+              </a>
+            </div>
+            <div class="friend-item">
+              <a href="https://www.youtube.com/@B13ss3d_17" target="_blank" style="text-decoration:none">
+                <div class="friend-avatar"><img src="amigos/taz.jpg" alt="B13ss3d_17"></div>
+                <div class="friend-name">B13ss3d_17</div>
+              </a>
+            </div>
+            <div class="friend-item">
+              <div class="friend-avatar"><img src="amigos/images.jpg" alt="bugs_g"></div>
+              <div class="friend-name">bugs_g</div>
+            </div>
+            <div class="friend-item">
+              <div class="friend-avatar" style="color:#440044;font-size:18px;font-family:'Oswald',sans-serif">+57</div>
+              <div class="friend-name" style="color:#440044">ver todos</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gif-sep"><img src="img/dividers/heartbeat.gif" alt=""></div>
+
+    </td>
+
+    <!-- ── RIGHT SIDEBAR ── -->
+    <td id="rsidebar">
+
+      <!-- CANCION DE LA SEMANA -->
+      <div class="rsb-card">
+        <div class="rsb-ttl">♫ Cancion</div>
+        <iframe src="https://open.spotify.com/embed/track/1Xr3x1zElsBYlFzTvS60c8?theme=0&utm_source=generator"
+          width="100%" height="80" frameborder="0"
+          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+          loading="lazy" style="display:block"></iframe>
+      </div>
+
+      <!-- QUOTE -->
+      <div class="rsb-card">
+        <div class="rsb-ttl">★ Quote</div>
+        <div class="rsb-quote">
+          <i>"I made a discovery today.<br>
+          I found a computer.<br>
+          Wait a second, this is cool.<br>
+          It does what I want it to.<br>
+          If it makes a mistake, it's because I screwed it up.<br>
+          Not because it doesn't like me...<br>
+                Or feels threatened by me...<br>
+                Or thinks I'm a smart ass...<br>
+                Or doesn't like teaching and shouldn't be here...<br>
+          <strong>Damn kid. All he does is play games. They're all alike.</strong>"
+        </i>
+          <div class="rsb-quote-src">— The Mentor, 1986</div>
+        </div>
+      </div>
+
+      <!-- CONTACTO -->
+      <div class="rsb-card">
+        <div class="rsb-ttl">Contacto</div>
+        <div class="rsb-body">
+          <div style="margin-bottom:6px">
+            <div style="font-size:9px;color:#775599;text-transform:uppercase;letter-spacing:2px;font-family:'Oswald',sans-serif;margin-bottom:2px">YouTube</div>
+            <a href="https://www.youtube.com/@Cabr4wastaken" target="_blank" style="color:#ff66ff;font-weight:bold;font-family:'Oswald',sans-serif;text-decoration:none;font-size:12px">@Cabr4wastaken</a>
+          </div>
+          <div style="margin-bottom:6px">
+            <div style="font-size:9px;color:#775599;text-transform:uppercase;letter-spacing:2px;font-family:'Oswald',sans-serif;margin-bottom:2px">GitHub</div>
+            <a href="https://github.com/cabr4" target="_blank" style="color:#ff66ff;font-weight:bold;font-family:'Oswald',sans-serif;text-decoration:none;font-size:12px">github/cabr4</a>
+          </div>
+          <div>
+            <div style="font-size:9px;color:#775599;text-transform:uppercase;letter-spacing:2px;font-family:'Oswald',sans-serif;margin-bottom:2px">HackerOne</div>
+            <a href="https://hackerone.com/cabr4" target="_blank" style="color:#ff66ff;font-weight:bold;font-family:'Oswald',sans-serif;text-decoration:none;font-size:12px">h1/cabr4</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- GIF chaos -->
+      <div class="rsb-card">
+        <div class="rsb-ttl">✦ Vibes</div>
+        <div class="rsb-body" style="display:flex;flex-wrap:wrap;gap:4px;justify-content:center;padding:8px">
+          <img src="img/vibes/v1.gif" height="40" style="transform:rotate(-4deg);image-rendering:pixelated" alt="">
+          <img src="img/vibes/v2.gif"  height="36" style="transform:rotate(5deg);image-rendering:pixelated"  alt="">
+          <img src="img/vibes/v3.gif" height="38" style="transform:rotate(-3deg);image-rendering:pixelated" alt="">
+          <img src="img/vibes/v4.gif" height="40" style="transform:rotate(4deg);image-rendering:pixelated" alt="">
+          <img src="img/vibes/v5.gif" height="36" style="transform:rotate(-5deg);image-rendering:pixelated" alt="">
+          <img src="img/vibes/v6.gif" height="38" style="transform:rotate(3deg);image-rendering:pixelated" alt="">
+          <img src="img/vibes/v7.gif" height="40" style="transform:rotate(-6deg);image-rendering:pixelated" alt="">
+        </div>
+      </div>
+
+      <!-- best viewed -->
+      <div style="font-size:9px;color:#330033;text-align:center;margin-top:8px;line-height:1.8">
+        best viewed in<br>
+        <span style="color:#550055;font-weight:bold">INTERNET EXPLORER 6</span><br>
+        800×600 · 256 COLORS
+      </div>
+
+    </td>
+  </tr></tbody>
+  </table>
+
+  <!-- ══ 88×31 BUTTON BAR ══ -->
+  <div id="btn-bar">
+    <marquee behavior="alternate" scrollamount="3">
+      <a href="https://www.reddit.com/r/buildapc/"           target="_blank"><img src="img/buttons/bestvwmonitor.gif" alt="monitor"></a>
+      <a href="https://hackerone.com/cabr4"                  target="_blank"><img src="img/buttons/hackerone.gif"     alt="h1"></a>
+      <a href="https://www.w3schools.com/html/"              target="_blank"><img src="img/buttons/html.gif"          alt="html"></a>
+      <a href="https://www.youtube.com/@Cabr4wastaken"       target="_blank"><img src="img/buttons/click_here.gif"    alt="youtube"></a>
+      <a href="https://www.youtube.com/watch?v=2Q3dGZPguSM" target="_blank"><img src="img/buttons/1advise.gif"       alt="advice"></a>
+      <a href="https://www.youtube.com/watch?v=geGziPUQD2U" target="_blank"><img src="img/buttons/imhigh.gif"        alt=""></a>
+      <img src="img/buttons/notepad4.gif" alt="">
+    </marquee>
+  </div>
+
+  <!-- ══ FOOTER ══ -->
+  <div id="footer">
+    hecho con ♥ y falta de sueño &nbsp;·&nbsp;
+    hosted on github pages &nbsp;·&nbsp;
+    born 2026 &nbsp;·&nbsp;
+    Menos Violencia, Mas Perreo &nbsp;·&nbsp;
+    <span class="footer-bling">★ Always under construction ★</span>
+  </div>
+
+</div><!-- #wrap -->
+
+<!-- Floating Bugs Bunny -->
+<div id="floaty-bugs">
+  <img src="img/ui/bugs.gif" alt="bugs">
+</div>
+
+
+<!-- Pumas logo (spinning) -->
+<div id="pumas-fixed">
+  <img src="img/ui/pumas.png" alt="Pumas">
+</div>
+
+</body>
+</html>
